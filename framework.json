@@ -1,28 +1,35 @@
 {
   "meta": {
-    "versione": "1.0",
-    "data": "2026-09-30",
+    "versione": "2.2",
+    "data": "2026-10-02",
     "pesi": {
-      "E": 1,
-      "D": 2,
-      "C": 3,
-      "B": 4,
-      "A": 5
+      "E": 1, "D": 2, "C": 3, "B": 4, "A": 5
     },
+    "peso_anti_pattern": -5,
+    "anti_pattern_llm": [
+      "H1.AP1", "H1.AP3",
+      "H2.AP1", "H2.AP3",
+      "H3.AP1", "H3.AP3",
+      "H4.AP1", "H4.AP2",
+      "S1.AP1", "S1.AP4",
+      "S2.AP1", "S2.AP3",
+      "S3.AP1", "S3.AP3",
+      "S4.AP3", "S4.AP4"
+    ],
     "soglie": [
-      {"min": 0,  "max": 0,   "fascia": "F"},
-      {"min": 1,  "max": 4,   "fascia": "E"},
-      {"min": 5,  "max": 12,  "fascia": "D"},
-      {"min": 13, "max": 25,  "fascia": "C"},
-      {"min": 26, "max": 50,  "fascia": "B"},
-      {"min": 51, "max": 999, "fascia": "A"}
+      {"min": 0,   "max": 0,    "fascia": "F", "valore_min": 1.5, "valore_max": 1.5},
+      {"min": 1,   "max": 4,    "fascia": "E", "valore_min": 2.0, "valore_max": 2.9},
+      {"min": 5,   "max": 12,   "fascia": "D", "valore_min": 3.0, "valore_max": 3.4},
+      {"min": 13,  "max": 25,   "fascia": "C", "valore_min": 3.5, "valore_max": 3.9},
+      {"min": 26,  "max": 50,   "fascia": "B", "valore_min": 4.0, "valore_max": 4.4},
+      {"min": 51,  "max": 9999, "fascia": "A", "valore_min": 4.5, "valore_max": 5.0}
     ]
   },
   "aree": {
     "H1": {
       "nome": "Efficientamento",
       "comportamenti": {
-        "E1": {"nome": "rappresenta_processo", "fascia": "E", "descrizione": "Rappresenta o descrive il processo nelle sue fasi (mappa, diagramma, descrizione)"},
+        "E1": {"nome": "rappresenta_processo", "fascia": "E", "descrizione": "Rappresenta o descrive il processo nelle sue fasi"},
         "E2": {"nome": "porta_problemi_team", "fascia": "E", "descrizione": "Porta i problemi o rallentamenti all'attenzione del team"},
         "D1": {"nome": "raccoglie_dati", "fascia": "D", "descrizione": "Raccoglie dati quantitativi su tempi, volumi, carichi, qualità"},
         "D2": {"nome": "confronta_capacita_domanda", "fascia": "D", "descrizione": "Confronta capacità disponibile e domanda"},
@@ -44,10 +51,10 @@
         "A7": {"nome": "consuntiva_vantaggi", "fascia": "A", "descrizione": "Calcola l'efficienza recuperata"}
       },
       "anti_pattern": {
-        "AP1": {"nome": "ottimizza_localmente", "descrizione": "Migliora parzialmente a scapito dell'intera visione"},
-        "AP2": {"nome": "ignora_dati", "descrizione": "Ignora dati rilevanti"},
-        "AP3": {"nome": "colpevolizza_persone", "descrizione": "Attribuisce inefficienze alle persone"},
-        "AP4": {"nome": "interviene_senza_capire", "descrizione": "Interviene senza comprendere il problema"}
+        "AP1": {"nome": "ottimizza_localmente", "descrizione": "Migliora parzialmente a scapito dell'intera visione", "pattern_letterali": ["ottimizzo solo", "mi concentro su quella fase", "il resto non mi interessa"]},
+        "AP2": {"nome": "ignora_dati", "descrizione": "Ignora dati rilevanti", "pattern_letterali": ["non guardo i numeri", "vado a sensazione", "i dati non servono"]},
+        "AP3": {"nome": "colpevolizza_persone", "descrizione": "Attribuisce inefficienze alle persone", "pattern_letterali": ["è colpa del team", "le persone non sono capaci", "non sono all'altezza"]},
+        "AP4": {"nome": "interviene_senza_capire", "descrizione": "Interviene senza comprendere il problema", "pattern_letterali": ["vediamo come va", "provo e vediamo", "cambio e basta"]}
       }
     },
     "H2": {
@@ -73,106 +80,98 @@
         "A5": {"nome": "comprensione_aggiornata", "fascia": "A", "descrizione": "Monitora e mantiene aggiornata la lettura del fenomeno"}
       },
       "anti_pattern": {
-        "AP1": {"nome": "trae_conclusioni_senza_analisi", "descrizione": "Trae conclusioni senza analisi"},
-        "AP2": {"nome": "confonde_correlazioni_cause", "descrizione": "Confonde correlazioni, coincidenze e cause"},
-        "AP3": {"nome": "azione_impulsiva", "descrizione": "Agisce senza aver compreso il fenomeno"},
-        "AP4": {"nome": "si_ferma_prima_spiegazione", "descrizione": "Si ferma alla prima spiegazione plausibile"}
+        "AP1": {"nome": "trae_conclusioni_senza_analisi", "descrizione": "Trae conclusioni senza analisi", "pattern_letterali": ["decido subito", "lo vedo chiaramente", "non serve analizzare"]},
+        "AP2": {"nome": "confonde_correlazioni_cause", "descrizione": "Confonde correlazioni, coincidenze e cause", "pattern_letterali": ["sicuramente dipende da", "è ovvio che", "per forza è"]},
+        "AP3": {"nome": "azione_impulsiva", "descrizione": "Agisce senza aver compreso il fenomeno", "pattern_letterali": ["faccio subito", "non aspetto", "agisco e basta"]},
+        "AP4": {"nome": "si_ferma_prima_spiegazione", "descrizione": "Si ferma alla prima spiegazione plausibile", "pattern_letterali": ["probabilmente è", "penso sia"]}
       }
     },
     "H3": {
       "nome": "Guidare il nuovo e il cambiamento",
       "comportamenti": {
-        "E1": {"nome": "reattivita_cambiamento", "fascia": "E", "descrizione": "Accetta la necessità di innovare o cambiare"},
-        "E2": {"nome": "comunica_cambiamento", "fascia": "E", "descrizione": "Comunica il cambiamento alle persone interessate"},
-        "D1": {"nome": "contatta_parti_rilevanti", "fascia": "D", "descrizione": "Prende contatto con le parti rilevanti"},
-        "D2": {"nome": "identifica_vincoli", "fascia": "D", "descrizione": "Identifica opportunità e alcuni vincoli"},
-        "D3": {"nome": "spinta_cambiamento", "fascia": "D", "descrizione": "Spinge e motiva al cambiamento"},
-        "C1": {"nome": "coinvolge_interessati", "fascia": "C", "descrizione": "Coinvolge le persone interessate"},
-        "C2": {"nome": "mappa_stakeholder", "fascia": "C", "descrizione": "Mappa stakeholder e interessi"},
-        "C3": {"nome": "affronta_resistenze", "fascia": "C", "descrizione": "Affronta le principali resistenze"},
-        "C4": {"nome": "stima_potenziale_rischio", "fascia": "C", "descrizione": "Stima potenziale, rischio e gap"},
-        "C5": {"nome": "governa_fasi", "fascia": "C", "descrizione": "Pianifica le attività del cambiamento (work package) e le presidia"},
-        "B1": {"nome": "percorso_iterativo", "fascia": "B", "descrizione": "Definisce un percorso iterativo"},
-        "B2": {"nome": "gestisce_resistenze_metodo", "fascia": "B", "descrizione": "Gestisce le resistenze con metodo"},
-        "B3": {"nome": "mostra_risultati", "fascia": "B", "descrizione": "Pianifica, raggiunge ed evidenzia traguardi intermedi e visibili"},
-        "B4": {"nome": "criteri_verifica", "fascia": "B", "descrizione": "Definisce criteri di verifica della sperimentazione"},
-        "B5": {"nome": "feedback_strutturati", "fascia": "B", "descrizione": "Raccoglie feedback strutturati e decide in base alle evidenze"},
-        "B6": {"nome": "nocciolo_duro", "fascia": "B", "descrizione": "Crea un nocciolo duro di persone con cui portare avanti il cambiamento"},
-        "A1": {"nome": "lettura_sistemica", "fascia": "A", "descrizione": "Legge opportunità e contesto in modo sistemico"},
-        "A2": {"nome": "esplicita_assunzioni", "fascia": "A", "descrizione": "Esplicita assunzioni e rischi"},
-        "A3": {"nome": "sperimenta_criteri", "fascia": "A", "descrizione": "Sperimenta con criteri chiari e itera con dati"},
-        "A4": {"nome": "porta_regime", "fascia": "A", "descrizione": "Porta il cambiamento a regime con trasferimento di competenze"},
-        "A5": {"nome": "integra_processi", "fascia": "A", "descrizione": "Integra la soluzione nei processi ordinari"},
-        "A6": {"nome": "crea_urgenza", "fascia": "A", "descrizione": "Aiuta gli altri a vedere la necessità del cambiamento"},
-        "A7": {"nome": "sviluppa_visione", "fascia": "A", "descrizione": "Definisce con chiarezza come sarà il futuro dopo il cambiamento"}
+        "E1": {"nome": "riconosce_necessita_cambiamento", "fascia": "E", "descrizione": "Riconosce che c'è bisogno di cambiare"},
+        "E2": {"nome": "comunica_il_cambiamento", "fascia": "E", "descrizione": "Comunica alle persone interessate che qualcosa cambierà"},
+        "D1": {"nome": "contatta_gli_stakeholder", "fascia": "D", "descrizione": "Prende contatto con le persone/funzioni coinvolte"},
+        "D2": {"nome": "identifica_vincoli_esterni", "fascia": "D", "descrizione": "Identifica vincoli normativi, di budget o organizzativi"},
+        "D3": {"nome": "spinge_per_il_cambiamento", "fascia": "D", "descrizione": "Spinge e motiva le persone a procedere"},
+        "C1": {"nome": "mappa_gli_stakeholder", "fascia": "C", "descrizione": "Mappa chi sono gli stakeholder e cosa vogliono"},
+        "C2": {"nome": "pianifica_le_attivita", "fascia": "C", "descrizione": "Pianifica le attività del cambiamento (fasi, tempi, responsabilità)"},
+        "C3": {"nome": "mostra_risultati_intermedi", "fascia": "C", "descrizione": "Comunica traguardi intermedi visibili"},
+        "C4": {"nome": "ascolta_gli_scettici", "fascia": "C", "descrizione": "Ascolta i dubbi degli scettici senza difendersi"},
+        "B2": {"nome": "crea_nocciolo_duro", "fascia": "B", "descrizione": "Costruisce un gruppo di persone che guida il cambiamento"},
+        "B3": {"nome": "celebra_successi", "fascia": "B", "descrizione": "Quando ottiene un risultato, celebra con le persone interessate"},
+        "B4": {"nome": "raccoglie_feedback_strutturato", "fascia": "B", "descrizione": "Raccoglie feedback in modo strutturato per correggere"},
+        "B5": {"nome": "definisce_criteri_di_verifica", "fascia": "B", "descrizione": "Definisce come verificare se il cambiamento funziona"},
+        "B6": {"nome": "trasferisce_competenze", "fascia": "B", "descrizione": "Trasferisce le competenze per rendere autonomi"},
+        "A1": {"nome": "crea_urgenza", "fascia": "A", "descrizione": "Fa percepire alle persone la necessità del cambiamento"},
+        "A2": {"nome": "comunica_visione_futuro", "fascia": "A", "descrizione": "Descrive come sarà il futuro dopo il cambiamento"},
+        "A3": {"nome": "impara_lezione", "fascia": "A", "descrizione": "Apprende dal passato e lo patrimonializza"},
+        "A4": {"nome": "gestisce_rilascio", "fascia": "A", "descrizione": "Gestisce e cura la fase di rilascio ai process owner"},
+        "A5": {"nome": "monitora_post_cambiamento", "fascia": "A", "descrizione": "Monitora i risultati e le regressioni nel tempo"}
       },
       "anti_pattern": {
-        "AP1": {"nome": "impone_soluzioni", "descrizione": "Impone soluzioni ignorando stakeholder"},
-        "AP2": {"nome": "ignora_resistenze", "descrizione": "Ignora i segnali di resistenza"},
-        "AP3": {"nome": "isola_oppositori", "descrizione": "Isola o penalizza chi si oppone"},
-        "AP4": {"nome": "nessun_apprendimento", "descrizione": "Non prevede apprendimento o aggiustamento"}
+        "AP1": {"nome": "impone_soluzioni", "descrizione": "Impone soluzioni ignorando stakeholder", "pattern_letterali": ["decido io", "lo impongo", "non c'è da discutere"]},
+        "AP2": {"nome": "ignora_resistenze", "descrizione": "Ignora i segnali di resistenza", "pattern_letterali": ["non li considero", "prima o poi si adattano", "vanno avanti"]},
+        "AP3": {"nome": "isola_oppositori", "descrizione": "Isola o penalizza chi si oppone", "pattern_letterali": ["lo isolo", "lo lascio da parte", "lo metto fuori"]},
+        "AP4": {"nome": "nessun_apprendimento", "descrizione": "Non prevede apprendimento o aggiustamento", "pattern_letterali": ["non c'è tempo per riflettere", "andiamo avanti senza tornare indietro"]}
       }
     },
     "H4": {
       "nome": "Gestione economica e finanziaria",
       "comportamenti": {
-        "E1": {"nome": "consuntiva_costi", "fascia": "E", "descrizione": "Gestisce i costi in ottica di consuntivazione"},
-        "E2": {"nome": "distingue_fissi_variabili", "fascia": "E", "descrizione": "Distingue costi fissi e variabili"},
-        "E3": {"nome": "costi_emergenza", "fascia": "E", "descrizione": "Gestione dei costi emergenziale e guidata dagli eventi"},
-        "D1": {"nome": "contabilita_analitica", "fascia": "D", "descrizione": "Misura costi elementari per prodotto/servizio/fase (contabilità analitica)"},
+        "E1": {"nome": "distingue_fissi_variabili", "fascia": "E", "descrizione": "Distingue costi fissi, variabili, diretti e indiretti"},
+        "E2": {"nome": "gestisce_costi_reattivamente", "fascia": "E", "descrizione": "Gestisce i costi solo quando diventano un problema"},
+        "D1": {"nome": "misura_costi_elementari", "fascia": "D", "descrizione": "Misura i costi elementari per prodotto, fase o servizio"},
         "D2": {"nome": "quantifica_fte_costo", "fascia": "D", "descrizione": "Quantifica FTE e costo orario"},
         "D3": {"nome": "individua_voci_rilevanti", "fascia": "D", "descrizione": "Individua le voci di costo che incidono sul risultato"},
         "C1": {"nome": "legge_conto_economico", "fascia": "C", "descrizione": "Legge il conto economico o il costo del servizio"},
         "C2": {"nome": "confronta_consuntivo_budget", "fascia": "C", "descrizione": "Confronta consuntivo, budget e forecast"},
         "C3": {"nome": "propone_interventi_costi", "fascia": "C", "descrizione": "Propone interventi plausibili sui costi"},
-        "C4": {"nome": "presidia_costi_effettivi", "fascia": "C", "descrizione": "Presidia costi effettivi e avanzamento"},
-        "B1": {"nome": "driver_costo", "fascia": "B", "descrizione": "Analizza i costi in base ai driver (es. costo per dipendente, per transazione)"},
+        "C4": {"nome": "driver_costo", "fascia": "C", "descrizione": "Identifica cosa genera i costi (driver)"},
+        "B1": {"nome": "prepara_business_case", "fascia": "B", "descrizione": "Prepara una simulazione prima di affrontare i costi"},
         "B2": {"nome": "valuta_investimenti", "fascia": "B", "descrizione": "Valuta investimenti considerando ritorni e rischi"},
-        "B3": {"nome": "analizza_costi_realizzazione", "fascia": "B", "descrizione": "Calcola e presidia i costi di processo e/o progetto"},
+        "B3": {"nome": "presidia_costi", "fascia": "B", "descrizione": "Presidia i costi effettivi di un progetto o di un processo"},
         "B4": {"nome": "verifica_saving", "fascia": "B", "descrizione": "Verifica che il saving si realizzi realmente"},
-        "B5": {"nome": "affronta_costi", "fascia": "B", "descrizione": "Propone autonomamente iniziative di riduzione degli sprechi e negoziazione dei contratti con i fornitori"},
         "A1": {"nome": "verifica_ritorno_investimenti", "fascia": "A", "descrizione": "Correla i costi al valore e al ritorno sull'investimento (ROI)"},
-        "A2": {"nome": "confronta_alternative_investimenti", "fascia": "A", "descrizione": "Confronta alternative e investimenti con criteri"},
+        "A2": {"nome": "attua_strategie_costi", "fascia": "A", "descrizione": "Identifica strategie di abbattimento costi (make or buy, outsourcing, taglio attività NVA, smartworking)"},
         "A3": {"nome": "integra_indicatori", "fascia": "A", "descrizione": "Integra indicatori finanziari e operativi"},
-        "A4": {"nome": "ABC_ZBB", "fascia": "A", "descrizione": "Implementa logiche avanzate come Activity-Based Costing (ABC) o Zero-Based Budgeting (ZBB)"},
+        "A4": {"nome": "ABC_ZBB", "fascia": "A", "descrizione": "Implementa logiche avanzate come ABC o ZBB"},
         "A5": {"nome": "usa_scostamenti", "fascia": "A", "descrizione": "Usa gli scostamenti per migliorare le decisioni future"}
       },
       "anti_pattern": {
-        "AP1": {"nome": "taglia_indiscriminato", "descrizione": "Taglia costi senza valutare l'impatto"},
-        "AP2": {"nome": "ignora_costi", "descrizione": "Ignora gli aspetti economici rilevanti"},
-        "AP3": {"nome": "non_considera_sostenibilita", "descrizione": "Non considera la sostenibilità finanziaria"},
-        "AP4": {"nome": "solo_prezzo", "descrizione": "Sceglie solo in base al prezzo"}
+        "AP1": {"nome": "taglia_indiscriminato", "descrizione": "Taglia i costi in modo impulsivo senza analisi. NON è AP1 se il manager valuta l'impatto prima di scegliere", "pattern_letterali": ["taglio tutto", "riduco tutto", "senza guardare", "taglio a prescindere"]},
+        "AP2": {"nome": "ignora_costi", "descrizione": "Prende decisioni senza considerare i costi. NON è AP2 se il manager cita dati economici anche parziali", "pattern_letterali": ["non è il mio problema", "costi non rilevanti", "non considero i costi"]},
+        "AP3": {"nome": "non_considera_sostenibilita", "descrizione": "Non valuta se l'iniziativa è sostenibile nel tempo. NON è AP3 se il manager esplicita tempi, ritorni o fonti di finanziamento", "pattern_letterali": ["vedremo dopo", "risolviamo poi", "adesso non importa"]},
+        "AP4": {"nome": "solo_prezzo", "descrizione": "Sceglie confrontando solo il prezzo. NON è AP4 se il manager confronta anche altri criteri", "pattern_letterali": ["il più economico", "costa meno", "spendo di meno"]}
       }
     },
     "S1": {
       "nome": "Guidare e decidere",
       "comportamenti": {
-        "E1": {"nome": "da_obiettivi", "fascia": "E", "descrizione": "Dà obiettivi e istruzioni al team"},
-        "E2": {"nome": "chiarisce_direzione_base", "fascia": "E", "descrizione": "Chiarisce direzione e priorità di base"},
-        "E3": {"nome": "stabilisce_scadenze", "fascia": "E", "descrizione": "Stabilisce scadenze e tempi di esecuzione"},
-        "D1": {"nome": "mantiene_coordinamento", "fascia": "D", "descrizione": "Mantiene il coordinamento del team"},
-        "D2": {"nome": "chiarisce_aspettative", "fascia": "D", "descrizione": "Chiarisce le aspettative degli stakeholder"},
-        "D3": {"nome": "decide_con_informazioni_disponibili", "fascia": "D", "descrizione": "Prende decisioni usando le informazioni disponibili"},
-        "C1": {"nome": "obiettivi_chiari", "fascia": "C", "descrizione": "Definisce obiettivi chiari e coinvolge il team"},
-        "C2": {"nome": "criteri_decisione", "fascia": "C", "descrizione": "Utilizza criteri espliciti per le decisioni"},
-        "C3": {"nome": "attribuisce_responsabilita", "fascia": "C", "descrizione": "Attribuisce chiare responsabilità"},
-        "C4": {"nome": "valuta_alternative", "fascia": "C", "descrizione": "Valuta alternative prima di decidere"},
-        "B1": {"nome": "definisce_direzione_priorita", "fascia": "B", "descrizione": "Definisce direzione e priorità"},
-        "B2": {"nome": "chiarisce_ruoli_responsabilita", "fascia": "B", "descrizione": "Chiarisce ruoli, responsabilità e interrelazioni"},
-        "B3": {"nome": "usa_delega", "fascia": "B", "descrizione": "Delega le persone del team per raggiungere gli obiettivi"},
-        "B4": {"nome": "assunzione_responsabilita", "fascia": "B", "descrizione": "Si assume la responsabilità della scelta e dei risultati"},
-        "B5": {"nome": "mantiene_aggiornamento", "fascia": "B", "descrizione": "Mantiene aggiornato il team su visione e progressi"},
-        "A1": {"nome": "visione_coinvolgente", "fascia": "A", "descrizione": "Crea una visione chiara e coinvolgente"},
-        "A2": {"nome": "collega_significato", "fascia": "A", "descrizione": "Collega direzione, priorità e significato"},
-        "A3": {"nome": "coinvolge_senza_rinunciare", "fascia": "A", "descrizione": "Coinvolge il team senza rinunciare alla responsabilità della decisione"},
-        "A4": {"nome": "gestisce_tradeoff", "fascia": "A", "descrizione": "Confronta alternative gestendo trade-off e rischi"},
-        "A5": {"nome": "autonomia_proporzionata", "fascia": "A", "descrizione": "Delega con autonomia proporzionata, verifica e apprendimento"}
+        "E1": {"nome": "assegna_obiettivi_operativi", "fascia": "E", "descrizione": "Dice al team quali attività svolgere"},
+        "E2": {"nome": "stabilisce_scadenze", "fascia": "E", "descrizione": "Fissa le date di consegna"},
+        "D1": {"nome": "condivide_contesto", "fascia": "D", "descrizione": "Condivide il contesto del progetto con il team"},
+        "D2": {"nome": "decide_su_operativo", "fascia": "D", "descrizione": "Prende decisioni sulle attività quotidiane"},
+        "D3": {"nome": "mantiene_coordinamento", "fascia": "D", "descrizione": "Coordina il lavoro tra le persone"},
+        "C1": {"nome": "definisce_criteri_decisione", "fascia": "C", "descrizione": "Definisce criteri espliciti per decidere"},
+        "C2": {"nome": "valuta_alternative", "fascia": "C", "descrizione": "Confronta più opzioni prima di scegliere"},
+        "C3": {"nome": "chiarisce_chi_fa_cosa", "fascia": "C", "descrizione": "Chiarisce chi è responsabile di ogni attività"},
+        "B1": {"nome": "definisce_priorita", "fascia": "B", "descrizione": "Definisce cosa viene prima e cosa dopo"},
+        "B2": {"nome": "comunica_motivazioni_decisioni", "fascia": "B", "descrizione": "Comunica il perché delle decisioni prese"},
+        "B3": {"nome": "delega_con_checkpoint", "fascia": "B", "descrizione": "Delega attività con verifiche intermedie"},
+        "B4": {"nome": "si_assume_responsabilita", "fascia": "B", "descrizione": "Si assume la responsabilità dei risultati"},
+        "B5": {"nome": "aggiorna_team_su_progressi", "fascia": "B", "descrizione": "Tiene il team aggiornato sui progressi"},
+        "A1": {"nome": "visione_ispirazionale", "fascia": "A", "descrizione": "Racconta un futuro desiderabile che motiva"},
+        "A2": {"nome": "collega_obiettivi_a_strategia", "fascia": "A", "descrizione": "Collega il lavoro quotidiano alla strategia aziendale"},
+        "A3": {"nome": "coinvolge_senza_deresponsabilizzare", "fascia": "A", "descrizione": "Coinvolge il team nelle decisioni mantenendo la responsabilità finale"},
+        "A4": {"nome": "delega_con_autonomia_proporzionata", "fascia": "A", "descrizione": "Delega con autonomia crescente basata sui risultati"},
+        "A5": {"nome": "costruisce_leadership_diffusa", "fascia": "A", "descrizione": "Sviluppa la capacità di leadership nel team"}
       },
       "anti_pattern": {
-        "AP1": {"nome": "non_da_direzione", "descrizione": "Non dà direzione"},
-        "AP2": {"nome": "controllo_continuo", "descrizione": "Controllo delle persone"},
-        "AP3": {"nome": "arbitrarieta", "descrizione": "Decide in modo arbitrario"},
-        "AP4": {"nome": "deresponsabilizza", "descrizione": "Deresponsabilizza il team"}
+        "AP1": {"nome": "non_da_direzione", "descrizione": "Non dà direzione al team", "pattern_letterali": ["non ti preoccupare", "lavora e basta", "non serve sapere", "non è importante"]},
+        "AP2": {"nome": "controllo_continuo", "descrizione": "Controlla le persone in modo eccessivo", "pattern_letterali": ["controllo tutto", "verifico ogni cosa", "non mi fido"]},
+        "AP3": {"nome": "arbitrarieta", "descrizione": "Decide in modo arbitrario", "pattern_letterali": ["decido io", "faccio come dico", "senza discussione"]},
+        "AP4": {"nome": "deresponsabilizza", "descrizione": "Deresponsabilizza il team", "pattern_letterali": ["non è compito tuo", "ci penso io", "lascia stare", "non ti occupare"]}
       }
     },
     "S2": {
@@ -186,7 +185,7 @@
         "C1": {"nome": "adatta_pubblici", "fascia": "C", "descrizione": "Adatta il messaggio ai pubblici"},
         "C2": {"nome": "struttura_chiara", "fascia": "C", "descrizione": "Struttura il messaggio in modo chiaro"},
         "C3": {"nome": "anticipa_alcune_obiezioni", "fascia": "C", "descrizione": "Prevede e anticipa le obiezioni"},
-        "B1": {"nome": "gestisce_negoziazione", "fascia": "B", "descrizione": "Gestisce l'interlocutore negoziando (esplora, propone, condivide soluzioni, chiude accordo)"},
+        "B1": {"nome": "gestisce_negoziazione", "fascia": "B", "descrizione": "Gestisce l'interlocutore negoziando"},
         "B2": {"nome": "comunica_struttura", "fascia": "B", "descrizione": "Comunica con struttura efficace"},
         "B3": {"nome": "utilizza_network", "fascia": "B", "descrizione": "Utilizza network per affrontare situazioni"},
         "B4": {"nome": "gestisce_obiezioni_dissenso", "fascia": "B", "descrizione": "Gestisce le obiezioni e il dissenso con chiarezza"},
@@ -198,39 +197,39 @@
         "A5": {"nome": "logica_scambio", "fascia": "A", "descrizione": "Mantiene una logica di scambio, non solo di richiesta"}
       },
       "anti_pattern": {
-        "AP1": {"nome": "non_comunica", "descrizione": "Non riesce a comunicare il messaggio"},
-        "AP2": {"nome": "modalita_aggressive", "descrizione": "Adotta modalità aggressive o passive"},
-        "AP3": {"nome": "manipolativo", "descrizione": "Adotta modalità manipolative"},
-        "AP4": {"nome": "relazionalmente_controproducente", "descrizione": "Comportamenti relazionalmente controproducenti"}
+        "AP1": {"nome": "non_comunica", "descrizione": "Non riesce a comunicare il messaggio", "pattern_letterali": ["non dico nulla", "non parlo", "evito"]},
+        "AP2": {"nome": "modalita_aggressive", "descrizione": "Adotta modalità aggressive o passive", "pattern_letterali": ["gli urlo", "lo costringo", "lo obbligo", "zitto"]},
+        "AP3": {"nome": "manipolativo", "descrizione": "Adotta modalità manipolative", "pattern_letterali": ["lo convinco con l'inganno", "faccio finta", "gli faccio credere"]},
+        "AP4": {"nome": "relazionalmente_controproducente", "descrizione": "Comportamenti relazionalmente controproducenti", "pattern_letterali": ["lo evito", "non lo considero", "lo ignoro"]}
       }
     },
     "S3": {
       "nome": "Sostenere e cooperare",
       "comportamenti": {
-        "E1": {"nome": "entra_in_contatto", "fascia": "E", "descrizione": "Entra in contatto con le parti interessate"},
-        "E2": {"nome": "ascolta_posizioni", "fascia": "E", "descrizione": "Ascolta le loro posizioni"},
-        "D1": {"nome": "cerca_soluzioni", "fascia": "D", "descrizione": "Cerca di trovare una soluzione"},
-        "D2": {"nome": "feedback_elementare", "fascia": "D", "descrizione": "Dà feedback con alcuni elementi di struttura"},
-        "D3": {"nome": "leve_motivazionali_diverse", "fascia": "D", "descrizione": "Usa leve motivazionali diversificate"},
-        "C1": {"nome": "affronta_resistenze_confronto", "fascia": "C", "descrizione": "Affronta resistenze con confronto e ricerca di soluzioni"},
-        "C2": {"nome": "feedback_strutturati", "fascia": "C", "descrizione": "Dà feedback strutturati"},
-        "C3": {"nome": "ascolto_attivo", "fascia": "C", "descrizione": "Ascolta attivamente e fa domande aperte"},
-        "B1": {"nome": "gestisce_resistenze_metodo", "fascia": "B", "descrizione": "Gestisce resistenze con metodo, esplorando interessi"},
-        "B2": {"nome": "soluzioni_integrative", "fascia": "B", "descrizione": "Cerca soluzioni integrative"},
-        "B3": {"nome": "feedback_sviluppo", "fascia": "B", "descrizione": "Dà feedback orientati allo sviluppo"},
-        "B4": {"nome": "motiva_coerente", "fascia": "B", "descrizione": "Motiva in modo coerente con persone e contesto"},
-        "B5": {"nome": "negozia_interessi", "fascia": "B", "descrizione": "Negozia esplorando interessi e bisogni"},
-        "A1": {"nome": "esplora_interessi_bisogni_profondita", "fascia": "A", "descrizione": "Esplora interessi e bisogni in profondità"},
-        "A2": {"nome": "soluzioni_win_win", "fascia": "A", "descrizione": "Costruisce soluzioni integrative win-win"},
-        "A3": {"nome": "feedback_su_fatti", "fascia": "A", "descrizione": "Dà feedback basati su fatti e orientati allo sviluppo"},
-        "A4": {"nome": "accordi_verificabili", "fascia": "A", "descrizione": "Costruisce accordi verificabili"},
-        "A5": {"nome": "motivazione_leve_coerenti", "fascia": "A", "descrizione": "Motiva con leve coerenti e sostenibili"}
+        "E1": {"nome": "prende_contatto", "fascia": "E", "descrizione": "Prende contatto diretto con la persona interessata"},
+        "E2": {"nome": "ascolta_senza_interrompere", "fascia": "E", "descrizione": "Ascolta la persona senza interromperla"},
+        "D1": {"nome": "propone_una_soluzione", "fascia": "D", "descrizione": "Propone alla persona una soluzione al problema"},
+        "D2": {"nome": "dice_cosa_pensa", "fascia": "D", "descrizione": "Dice alla persona cosa pensa del suo lavoro (anche in modo generico)"},
+        "D3": {"nome": "riconosce_il_lavoro", "fascia": "D", "descrizione": "Riconosce il lavoro fatto, pubblicamente o privatamente"},
+        "C1": {"nome": "gestisce_la_resistenza", "fascia": "C", "descrizione": "Riconosce e gestisce la resistenza o il conflitto"},
+        "C2": {"nome": "da_feedback_con_esempi", "fascia": "C", "descrizione": "Dà feedback citando esempi o fatti specifici"},
+        "C3": {"nome": "fa_domande_per_capire", "fascia": "C", "descrizione": "Fa domande aperte per capire la posizione dell'altro"},
+        "B1": {"nome": "esplora_gli_interessi", "fascia": "B", "descrizione": "Esplora gli interessi e i bisogni dietro le posizioni espresse"},
+        "B2": {"nome": "cerca_soluzione_condivisa", "fascia": "B", "descrizione": "Cerca una soluzione costruita insieme all'altro"},
+        "B3": {"nome": "struttura_il_feedback", "fascia": "B", "descrizione": "Struttura il feedback in fatti, impatto e azioni concordate"},
+        "B4": {"nome": "motiva_con_azioni", "fascia": "B", "descrizione": "Motiva con azioni concrete (non solo parole)"},
+        "B5": {"nome": "conduce_negoziazione", "fascia": "B", "descrizione": "Conduce una negoziazione esplorando, proponendo e chiudendo"},
+        "A1": {"nome": "chiude_accordo_verificabile", "fascia": "A", "descrizione": "Conclude un accordo fissando responsabilità, tempi e verifiche"},
+        "A2": {"nome": "sviluppa_le_persone", "fascia": "A", "descrizione": "Sviluppa le competenze delle persone definendo un percorso strutturato"},
+        "A3": {"nome": "promuove_equilibrio", "fascia": "A", "descrizione": "Si adopera per l'equilibrio vita-lavoro e il carico sostenibile"},
+        "A4": {"nome": "crea_sicurezza_psicologica", "fascia": "A", "descrizione": "Crea le condizioni perché le persone si sentano libere di parlare e sbagliare"},
+        "A5": {"nome": "allinea_motivazione_azienda", "fascia": "A", "descrizione": "Collega la motivazione personale agli obiettivi aziendali"}
       },
       "anti_pattern": {
-        "AP1": {"nome": "ignora_resistenze", "descrizione": "Ignora resistenze"},
-        "AP2": {"nome": "interrompe_ascolto", "descrizione": "Interrompe l'ascolto"},
-        "AP3": {"nome": "autorita_impropria", "descrizione": "Usa l'autorità in modo improprio"},
-        "AP4": {"nome": "relazionalmente_controproducente", "descrizione": "Comportamenti relazionalmente controproducenti"}
+        "AP1": {"nome": "ignora_resistenze", "descrizione": "Ignora resistenze", "pattern_letterali": ["non considero", "non ascolto", "vado avanti"]},
+        "AP2": {"nome": "interrompe_ascolto", "descrizione": "Interrompe l'ascolto", "pattern_letterali": ["lo interrompo", "non lo lascio finire", "taglio corto"]},
+        "AP3": {"nome": "autorita_impropria", "descrizione": "Usa l'autorità in modo improprio", "pattern_letterali": ["lo obbligo", "lo costringo", "non ha scelta"]},
+        "AP4": {"nome": "relazionalmente_controproducente", "descrizione": "Comportamenti relazionalmente controproducenti", "pattern_letterali": ["lo punisco", "gli rendo la vita difficile", "non lo aiuto"]}
       }
     },
     "S4": {
@@ -256,10 +255,10 @@
         "A5": {"nome": "direzione_ambigue", "fascia": "A", "descrizione": "Mantiene la direzione anche in situazioni ambigue"}
       },
       "anti_pattern": {
-        "AP1": {"nome": "reazioni_impulsive", "descrizione": "Manifesta reazioni impulsive"},
-        "AP2": {"nome": "perde_efficacia", "descrizione": "Perde efficacia quando la pressione aumenta"},
-        "AP3": {"nome": "scarica_tensione", "descrizione": "Scarica la tensione sugli altri"},
-        "AP4": {"nome": "si_blocca", "descrizione": "Si blocca di fronte ai cambiamenti"}
+        "AP1": {"nome": "reazioni_impulsive", "descrizione": "Manifesta reazioni impulsive", "pattern_letterali": ["sbotto", "perdo la pazienza", "mi arrabbio"]},
+        "AP2": {"nome": "perde_efficacia", "descrizione": "Perde efficacia quando la pressione aumenta", "pattern_letterali": ["non riesco più", "mi blocco", "non ce la faccio"]},
+        "AP3": {"nome": "scarica_tensione", "descrizione": "Scarica la tensione sugli altri", "pattern_letterali": ["me la prendo con loro", "scarico la tensione", "li incolpo"]},
+        "AP4": {"nome": "si_blocca", "descrizione": "Si blocca di fronte ai cambiamenti", "pattern_letterali": ["non faccio nulla", "aspetto", "mi fermo"]}
       }
     }
   }

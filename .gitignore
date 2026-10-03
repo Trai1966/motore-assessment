@@ -3,3 +3,10 @@ __pycache__/
 test_realistico.json
 .env
 .DS_Store
+app_originale.py
+applica_patch.py
+stampa_report.py
+run_tests.sh
+out_*.json
+risultato_*.json
+test_*.json

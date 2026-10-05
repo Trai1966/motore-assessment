@@ -678,7 +678,7 @@ Nessun'altra parola. Solo il JSON."""
         }
 
 
-def salva_sessione(sessione_id, risposte, risultati, medie, commenti, durata_sec, utente=""):
+def salva_sessione(sessione_id, risposte, risultati, medie, commenti, durata_sec, utente="", azienda=""):
     """Salva la sessione su Google Sheets. Non blocca il flusso se fallisce."""
     if not GSHEET_WEBHOOK_URL:
         return
@@ -692,6 +692,7 @@ def salva_sessione(sessione_id, risposte, risultati, medie, commenti, durata_sec
         payload = {
             "sessione_id": sessione_id,
             "utente": utente,
+            "azienda": azienda,
             "durata_sec": durata_sec,
             "n_risposte": len(risposte),
             "risposte": risposte,
@@ -772,7 +773,8 @@ def valuta():
         sessione_id = dati.get("sessione_id", "no-id")
         durata_sec = dati.get("durata_sec", 0)
         utente = dati.get("utente", "")
-        salva_sessione(sessione_id, risposte, risultati, medie, commenti, durata_sec, utente)
+        azienda = dati.get("azienda", "")
+        salva_sessione(sessione_id, risposte, risultati, medie, commenti, durata_sec, utente, azienda)
         return jsonify({
             "success": True,
             "risultati": risultati,

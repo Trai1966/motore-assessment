@@ -682,6 +682,7 @@ def salva_sessione(sessione_id, risposte, risultati, medie, commenti, durata_sec
     """Salva la sessione su Google Sheets. Non blocca il flusso se fallisce."""
     if not GSHEET_WEBHOOK_URL:
         return
+    GSHEET_TOKEN = os.environ.get("GSHEET_TOKEN", "")
     try:
         punteggi = {a: {"fascia": r.get("fascia"), "valore": r.get("valore"),
                         "netto": r.get("punteggio_grezzo"),
@@ -690,6 +691,7 @@ def salva_sessione(sessione_id, risposte, risultati, medie, commenti, durata_sec
                         "ap": r.get("anti_pattern_rilevati", [])}
                     for a, r in risultati.items()}
         payload = {
+            "token": GSHEET_TOKEN,
             "sessione_id": sessione_id,
             "utente": utente,
             "azienda": azienda,

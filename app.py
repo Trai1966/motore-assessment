@@ -291,6 +291,17 @@ def calcola_valore_modulato(punteggio, fascia, max_area):
     
     return 3.5
 
+def rinormalizza_valore(valore_raw, fascia):
+    """Rinormalizza il valore dalla scala interna (1.5-5.0) alla scala esposta (0.0-5.0).
+    La fascia F resta 0.0. Le fasce E-D-C-B-A (che internamente vanno da 2.0 a 5.0)
+    vengono rimappate linearmente su 0.0-5.0."""
+    if fascia == "F":
+        return 0.0
+    valore = (valore_raw - 2.0) * 5.0 / 3.0
+    valore = max(0.0, min(5.0, valore))
+    return round(valore, 1)
+
+
 def valuta_area(area_id, risposte_area, ap_rilevati):
     """Valuta un'area. Gli anti-pattern arrivano già rilevati come lista di codici."""
     try:
@@ -313,7 +324,8 @@ def valuta_area(area_id, risposte_area, ap_rilevati):
     fascia = punteggio_a_fascia(punteggio_finale)
     
     max_area = max_punteggio_area(area_id)
-    valore = calcola_valore_modulato(punteggio_finale, fascia, max_area)
+    valore_raw = calcola_valore_modulato(punteggio_finale, fascia, max_area)
+    valore = rinormalizza_valore(valore_raw, fascia)
     
     return {
         "fascia": fascia,
@@ -416,7 +428,8 @@ def valuta_assessment_veloce(risposte):
         punteggio_finale = max(0, punteggio_positivo + penalita)
         fascia = punteggio_a_fascia(punteggio_finale)
         max_area = max_punteggio_area(area_id)
-        valore = calcola_valore_modulato(punteggio_finale, fascia, max_area)
+        valore_raw = calcola_valore_modulato(punteggio_finale, fascia, max_area)
+        valore = rinormalizza_valore(valore_raw, fascia)
 
         risultati[area_id] = {
             "fascia": fascia,

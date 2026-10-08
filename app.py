@@ -640,9 +640,14 @@ REGOLE ELEMENTI NON EMERSI:
     * Forma impersonale: "Non si rileva [sostantivo]", "Non emerge [sostantivo]"
     * Forma affermativa/discorsiva: "Resta da osservare [sostantivo]", "Tra gli elementi non documentati figurano [sostantivo]", "Il profilo si caratterizza per l'assenza di [sostantivo]", "Su [sostantivo] le evidenze sono limitate", "Il tema di [sostantivo] resta inesplorato"
 - Il paragrafo deve essere DISCORSIVO, non una lista di frasi tutte con la stessa struttura. Alterna soggetto, formule impersonali e forme affermative.
+- SELEZIONA i 5-8 elementi PIU' RILEVANTI, non elencare tutti quelli assenti. Un paragrafo che elenca 30 elementi non e' leggibile e perde efficacia.
+- Dai priorita' a:
+    * elementi che ricorrono in piu' aree (piu' significativi)
+    * elementi lontani dalla fascia raggiunta (piu' distanti dal profilo attuale)
+    * elementi di fascia alta (A, B) che il manager non ha raggiunto
 - Non prescrittivo: descrivi cosa manca, non cosa il manager dovrebbe fare.
 - Vietato riformulare o citare indirettamente le domande del questionario.
-- Descrivi cosa manca tra gli elementi elencati. Non inventare comportamenti non presenti nella lista.
+- Non inventare comportamenti non presenti nella lista degli elementi assenti.
 
 REGOLE SUL NUMERO DI RIGHE:
 - Il numero di righe di ciascun paragrafo deve essere proporzionale al materiale disponibile, non fisso.

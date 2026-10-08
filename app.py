@@ -52,7 +52,7 @@ def area_da_domanda(codice):
     return None
 
 
-def chiama_llm(prompt, max_tokens=8000, max_retry=5):
+def chiama_llm(prompt, max_tokens=8000, max_retry=2):
     """Chiama l'API di Cerebras con retry automatico su 429 e 5xx."""
     headers = {
         "Authorization": f"Bearer {CEREBRAS_API_KEY}",
@@ -455,8 +455,6 @@ def valuta_assessment(risposte):
                 ap_da_llm.add(codice_completo.split(".")[1])
         ap_per_area[area_id] = list(ap_da_python | ap_da_llm)
 
-    time.sleep(15)
-
     risultati = {}
     for area_id in FRAMEWORK["aree"]:
         evidenze = evidenze_per_area[area_id]
@@ -467,7 +465,6 @@ def valuta_assessment(risposte):
             }
         else:
             risultati[area_id] = valuta_area(area_id, evidenze, ap_per_area[area_id])
-        time.sleep(8)
 
     return risultati
 

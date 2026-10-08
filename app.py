@@ -20,9 +20,9 @@ USA_PROVVISORIA_VELOCE = os.environ.get("PROVVISORIA_VELOCE", "0") == "1"
 app = Flask(__name__)
 CORS(app)
 
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
-GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
-MODELLO = "qwen/qwen3.8-27b"
+CEREBRAS_API_KEY = os.environ.get("CEREBRAS_API_KEY", "")
+CEREBRAS_URL = "https://api.cerebras.ai/v1/chat/completions"
+MODELLO = "qwen-3.8-27b"
 
 # Carica il framework
 FRAMEWORK_PATH = os.path.join(os.path.dirname(__file__), "framework.json")
@@ -41,17 +41,6 @@ POOL_AREA = {
     "POOL-S1": "S1", "POOL-S2": "S2", "POOL-S3": "S3", "POOL-S4": "S4",
 }
 
-# Testo delle domande del pool
-TESTI_POOL = {
-    "POOL-H1": "Durante la fase di test del nuovo servizio ti accorgi che il processo è più lento e costoso del previsto. Cosa fai per migliorare le performance?",
-    "POOL-H2": "I dati di mercato sono contraddittori e oscillano: alcuni indicatori salgono, altri scendono. Non è chiaro cosa li muova. Come affronti l'incertezza dei dati?",
-    "POOL-H3": "Alcuni membri chiave del team iniziano a manifestare scetticismo verso il progetto. Il loro atteggiamento sta influenzando anche altri. Come intervieni?",
-    "POOL-H4": "Il direttore commerciale ti chiede di ridurre i costi del progetto di realizzazione del nuovo servizio del 15%, senza però ridurre la qualità del servizio erogato.",
-    "POOL-S1": "Hai 10 interventi urgenti da fare questa settimana, ma il tempo e le risorse ti permettono di realizzarne solo due. Cosa fai?",
-    "POOL-S2": "Siamo al terzo mese ed è ormai evidente che il progetto non raggiungerà gli obiettivi fissati. Come ti comporti con i diversi stakeholder?",
-    "POOL-S3": "Un collaboratore ti chiede di crescere e avere maggiori deleghe nel progetto. In contemporanea una funzione ti chiede di spostare le scadenze in avanti su un task critico per il progetto. Come affronti le due situazioni?",
-    "POOL-S4": "Alla fine del secondo mese, il direttore commerciale ti convoca: la direzione ha rivisto gli obiettivi del progetto. Il servizio deve essere lanciato entro la fine del terzo mese (non più il quarto), il target sale da 10 a 25 clienti, e il budget resta invariato. Il team è lo stesso. Come reagisci?",
-}
 
 
 def area_da_domanda(codice):
@@ -63,22 +52,23 @@ def area_da_domanda(codice):
     return None
 
 
-def chiama_llm(prompt, max_tokens=4000, max_retry=5):
-    """Chiama l'API di Groq con retry automatico su 429 e 5xx."""
+def chiama_llm(prompt, max_tokens=8000, max_retry=5):
+    """Chiama l'API di Cerebras con retry automatico su 429 e 5xx."""
     headers = {
-        "Authorization": f"Bearer {GROQ_API_KEY}",
+        "Authorization": f"Bearer {CEREBRAS_API_KEY}",
         "Content-Type": "application/json",
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     }
     body = {
         "model": MODELLO,
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.2,
         "max_tokens": max_tokens,
-        "seed": 42
+        "seed": 42,
+        "reasoning_effort": "none"
     }
     req = urllib.request.Request(
-        GROQ_URL,
+        CEREBRAS_URL,
         data=json.dumps(body).encode("utf-8"),
         headers=headers,
         method="POST"
@@ -88,7 +78,14 @@ def chiama_llm(prompt, max_tokens=4000, max_retry=5):
         try:
             with urllib.request.urlopen(req) as response:
                 risultato = json.loads(response.read().decode("utf-8"))
-            return risultato["choices"][0]["message"]["content"].strip()
+            msg = risultato["choices"][0]["message"]
+            if "content" not in msg or not msg.get("content"):
+                print(f"[DEBUG] Risposta senza content. Chiavi message: {list(msg.keys())}")
+                print(f"[DEBUG] finish_reason: {risultato['choices'][0].get('finish_reason')}")
+                print(f"[DEBUG] usage: {risultato.get('usage')}")
+                print(f"[DEBUG] primi 300 char risposta: {json.dumps(risultato)[:300]}")
+                raise ValueError("Content mancante nella risposta LLM")
+            return msg["content"].strip()
         except urllib.error.HTTPError as e:
             if e.code == 429:
                 attesa = 30 * (tentativo + 1)
@@ -153,7 +150,7 @@ Rispondi SOLO con un JSON valido con questa struttura esatta:
 
 Nessun'altra parola. Solo il JSON."""
 
-    risposta = chiama_llm(prompt)
+    risposta = chiama_llm(prompt, max_tokens=16000)
     inizio = risposta.find("{")
     fine = risposta.rfind("}") + 1
     if inizio == -1 or fine == 0:
@@ -217,7 +214,7 @@ Rispondi SOLO con un JSON valido che elenca i codici degli anti-pattern rilevati
 Se non rilevi nessun anti-pattern, restituisci: {{"anti_pattern": []}}
 Nessun'altra parola. Solo il JSON."""
 
-    risposta = chiama_llm(prompt, max_tokens=800)
+    risposta = chiama_llm(prompt, max_tokens=12000)
     inizio = risposta.find("{")
     fine = risposta.rfind("}") + 1
     if inizio == -1 or fine == 0:
@@ -628,7 +625,21 @@ REGOLE PUNTI DI FORZA:
 
 REGOLE ELEMENTI NON EMERSI:
 - Terza persona.
-- Formule: "non è emerso che...", "non sono emersi elementi su...".
+- Forma NOMINALE: usa sempre "[formula] + [sostantivo]" invece di "[formula] che il manager [verbo]". La forma con il verbo coniugato porta a errori grammaticali (es. "definisse", "confrontasse"): VIETATA.
+- Formule ammesse per esprimere un elemento assente (varia tra loro):
+    * "Non sono emersi elementi su/sulla/relativi a [sostantivo]"
+    * "Non sono stati esplicitati [sostantivo/i]"
+    * "Non si rileva / non si osserva [sostantivo]"
+    * "Non emerge [sostantivo]"
+    * "Non è stato affrontato [sostantivo]"
+    * "Non risultano [sostantivo/i]"
+    * "Non sono stati presidiati [sostantivo/i]"
+    * "Non trova spazio [sostantivo]"
+- VARIA l'APERTURA delle frasi: NON iniziare ogni frase con "Non...". Alterna strutture diverse, ad esempio:
+    * Soggetto prima: "Il manager non ha mostrato [sostantivo]", "Il profilo resta inesplorato su [sostantivo]", "L'area [X] non documenta [sostantivo]"
+    * Forma impersonale: "Non si rileva [sostantivo]", "Non emerge [sostantivo]"
+    * Forma affermativa/discorsiva: "Resta da osservare [sostantivo]", "Tra gli elementi non documentati figurano [sostantivo]", "Il profilo si caratterizza per l'assenza di [sostantivo]", "Su [sostantivo] le evidenze sono limitate", "Il tema di [sostantivo] resta inesplorato"
+- Il paragrafo deve essere DISCORSIVO, non una lista di frasi tutte con la stessa struttura. Alterna soggetto, formule impersonali e forme affermative.
 - Non prescrittivo: descrivi cosa manca, non cosa il manager dovrebbe fare.
 - Vietato riformulare o citare indirettamente le domande del questionario.
 - Descrivi cosa manca tra gli elementi elencati. Non inventare comportamenti non presenti nella lista.
@@ -638,7 +649,11 @@ REGOLE SUL NUMERO DI RIGHE:
 - Se hai ricevuto 0-2 elementi complessivi per un paragrafo: scrivi 1-2 righe, oppure una sola frase.
 - Se hai ricevuto 3-6 elementi: scrivi 3-4 righe.
 - Se hai ricevuto 7 o più elementi: scrivi 5-8 righe.
-- Se un paragrafo non ha elementi (0), scrivi una frase breve e neutra, ad esempio: "Non sono emersi elementi sufficienti per descrivere punti di forza in modo strutturato."
+- Se un paragrafo ha 0 elementi, scrivi UNA frase neutra SPECIFICA per quel campo:
+    * Per punti_forza: "Non sono emersi elementi sufficienti per descrivere punti di forza in modo strutturato."
+    * Per elementi_non_emersi: "Non sono emersi elementi sufficienti per descrivere aree di miglioramento in modo strutturato."
+- I due campi DEVONO essere DIVERSI. Non copiare MAI lo stesso testo tra punti_forza ed elementi_non_emersi.
+- Se hai elementi da descrivere (sopra soglia), NON usare le frasi di fallback: scrivi il paragrafo con contenuto reale.
 - Ogni frase deve essere ancorata a uno degli elementi elencati. NON inventare comportamenti, situazioni o esempi che non compaiono nella lista.
 
 FORMATTAZIONE:
@@ -654,7 +669,7 @@ Rispondi SOLO con un JSON valido:
 Nessun'altra parola. Solo il JSON."""
 
     try:
-        risposta = chiama_llm(prompt, max_tokens=1500)
+        risposta = chiama_llm(prompt, max_tokens=15000)
         inizio = risposta.find("{")
         fine = risposta.rfind("}") + 1
         if inizio == -1 or fine == 0:
@@ -675,11 +690,13 @@ Nessun'altra parola. Solo il JSON."""
         }
 
 
-def salva_sessione(sessione_id, risposte, risultati, medie, commenti, durata_sec, utente="", azienda=""):
+def salva_sessione(sessione_id, risposte, risultati, medie, commenti, durata_sec, utente="", azienda="", corsi=None):
     """Salva la sessione su Google Sheets. Non blocca il flusso se fallisce."""
     if not GSHEET_WEBHOOK_URL:
         return
     GSHEET_TOKEN = os.environ.get("GSHEET_TOKEN", "")
+    if corsi is None:
+        corsi = []
     try:
         punteggi = {a: {"fascia": r.get("fascia"), "valore": r.get("valore"),
                         "netto": r.get("punteggio_grezzo"),
@@ -697,7 +714,8 @@ def salva_sessione(sessione_id, risposte, risultati, medie, commenti, durata_sec
             "risposte": risposte,
             "punteggi": punteggi,
             "medie": medie,
-            "commenti": commenti
+            "commenti": commenti,
+            "corsi": corsi
         }
         req = urllib.request.Request(
             GSHEET_WEBHOOK_URL,
@@ -746,10 +764,7 @@ def valuta_provvisoria():
         return jsonify({
             "success": True,
             "aree_deboli": aree_deboli,
-            "domande_selezionate": [
-                {"codice": c, "testo": TESTI_POOL[c], "area": POOL_AREA[c]}
-                for c in domande_selezionate
-            ],
+            "domande_selezionate": domande_selezionate,
             "risultati_provvisori": risultati
         }), 200
     except Exception as e:
@@ -769,17 +784,35 @@ def valuta():
             "soft": round(sum(risultati[a]["valore"] for a in ["S1","S2","S3","S4"]) / 4, 1)
         }
         commenti = genera_commenti(risultati)
-        sessione_id = dati.get("sessione_id", "no-id")
-        durata_sec = dati.get("durata_sec", 0)
-        utente = dati.get("utente", "")
-        azienda = dati.get("azienda", "")
-        salva_sessione(sessione_id, risposte, risultati, medie, commenti, durata_sec, utente, azienda)
         return jsonify({
             "success": True,
             "risultati": risultati,
             "medie": medie,
             "commenti": commenti
         }), 200
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/salva-sessione', methods=['POST'])
+def salva_sessione_route():
+    """Salva una sessione su Google Sheets. Chiamato dal frontend DOPO aver calcolato i corsi."""
+    dati = request.get_json()
+    if not dati:
+        return jsonify({"success": False, "error": "Payload mancante"}), 400
+    try:
+        salva_sessione(
+            sessione_id=dati.get("sessione_id", "no-id"),
+            risposte=dati.get("risposte", {}),
+            risultati=dati.get("risultati", {}),
+            medie=dati.get("medie", {}),
+            commenti=dati.get("commenti", {}),
+            durata_sec=dati.get("durata_sec", 0),
+            utente=dati.get("utente", ""),
+            azienda=dati.get("azienda", ""),
+            corsi=dati.get("corsi", [])
+        )
+        return jsonify({"success": True}), 200
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
